@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow">
+  <h3 class="text-lg font-semibold mb-4">Recent Expenses</h3>
+
+  <div class="space-y-3">
+    {% for exp in expenses %}
+      <div class="flex items-center justify-between p-3 rounded-lg border border-slate-100">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center">
+            <span class="text-sm">{{ exp.category[:1] }}</span>
+          </div>
+          <div>
+            <div class="font-medium">{{ exp.description or exp.category }}</div>
+            <div class="text-sm text-slate-500">{{ exp.category }} • {{ exp.date.strftime('%b %d, %Y') }}</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="font-semibold">${{ '%.2f'|format(exp.amount) }}</div>
+          <form method="post" action="{{ url_for('delete_expense', expense_id=exp.id) }}">
+            <button type="submit" class="text-slate-400 hover:text-red-500">Delete</button>
+          </form>
+        </div>
+      </div>
+    {% else %}
+      <div class="text-slate-500">No expenses yet.</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+

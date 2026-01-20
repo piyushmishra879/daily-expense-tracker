@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="bg-white p-6 rounded-xl shadow">
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-lg font-semibold">Spending by Category</h3>
+  </div>
+
+  <div id="chart-area" class="flex flex-col md:flex-row gap-4 items-center">
+    <div style="width:260px; height:260px">
+      <canvas id="donutChart"></canvas>
+    </div>
+
+    <div style="flex:1; min-width:300px; height:220px">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <div id="legend" class="mt-4 flex gap-4 items-center text-sm text-slate-600"></div>
+
+  <div id="chart-message" class="mt-4 text-slate-500"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

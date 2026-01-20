@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+  <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+    <span class="text-sm text-slate-500">Total Spending</span>
+    <div class="mt-2 text-2xl font-extrabold">${{ '%.2f'|format(total) }}</div>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+    <span class="text-sm text-slate-500">This Month</span>
+    <div class="mt-2 text-2xl font-extrabold">December</div>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+    <span class="text-sm text-slate-500">Transactions</span>
+    <div class="mt-2 text-2xl font-extrabold">{{ transactions }}</div>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow flex flex-col">
+    <span class="text-sm text-slate-500">Avg per Day</span>
+    <div class="mt-2 text-2xl font-extrabold">${{ '%.2f'|format(avg_per_day) }}</div>
+  </div>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <div class="bg-white p-6 rounded-xl shadow">
+    <h3 class="text-lg font-semibold mb-4">Add Expense (quick)</h3>
+    <form action="{{ url_for('add_page') }}" method="post" class="space-y-3">
+      <select name="category" class="w-full rounded border p-2">
+        {% for c in categories %}<option>{{ c }}</option>{% endfor %}
+      </select>
+      <input name="amount" step="0.01" placeholder="$ 0.00" class="w-full rounded border p-2"/>
+      <input name="description" placeholder="Description (optional)" class="w-full rounded border p-2"/>
+      <input name="date" type="date" value="{{ (date.today()).isoformat() }}" class="w-full rounded border p-2"/>
+      <button class="w-full bg-emerald-500 text-white p-2 rounded">Add</button>
+    </form>
+  </div>
+
+  <div class="bg-white p-6 rounded-xl shadow">
+    <h3 class="text-lg font-semibold mb-4">Recent</h3>
+    <div class="space-y-3">
+      {% for r in recent %}
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-medium">{{ r.description or r.category }}</div>
+            <div class="text-sm text-slate-500">{{ r.category }} • {{ r.date.strftime('%b %d, %Y') }}</div>
+          </div>
+          <div class="font-semibold">${{ '%.2f'|format(r.amount) }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<footer class="text-center text-slate-500 mt-8">Track your expenses, save more money 💰</footer>
+{% endblock %}
