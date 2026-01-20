@@ -5,15 +5,13 @@ import os
 
 app = Flask(__name__)
 
-# --------------------------
 # MySQL DATABASE CONNECTION
-# (keep your existing URI; change it if needed)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:Tismarkhan0%40@localhost/mytodo'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# --- Model ---
 class Expense(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(64), nullable=False)
@@ -30,7 +28,7 @@ class Expense(db.Model):
             "date": self.date.isoformat() if self.date else None
         }
 
-# CLI helper to create DB tables
+
 @app.cli.command("init-db")
 def init_db():
     db.create_all()
@@ -39,17 +37,15 @@ def init_db():
 # Shared categories
 CATEGORIES = ["Food & Dining", "Transport", "Shopping", "Bills", "Other"]
 
-# --- Pages ---
+
 @app.route("/")
 def home():
     return redirect(url_for("dashboard"))
 
 @app.route("/dashboard")
 def dashboard():
-    # compute totals and other values
     total = db.session.query(db.func.sum(Expense.amount)).scalar() or 0.0
     transactions = Expense.query.count()
-    # avg_per_day variable currently computes avg per transaction
     avg_per_day = (total / transactions) if transactions else 0.0
     recent = Expense.query.order_by(Expense.date.desc()).limit(3).all()
 
@@ -60,7 +56,7 @@ def dashboard():
         avg_per_day=avg_per_day,
         recent=recent,
         categories=CATEGORIES,
-        date=date       # <-- important: make `date` available in the template
+        date=date       
     )
 
 @app.route("/add", methods=["GET", "POST"])
